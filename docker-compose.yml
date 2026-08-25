@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  web:
+    image: php:8.4-apache
+    container_name: tp_php_app
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html
+    depends_on:
+      - db
+    networks:
+      - tp-network
+
+  db:
+    image: mysql:9.0
+    container_name: tp_mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: mi_base_datos
+      MYSQL_USER: usuario_tp
+      MYSQL_PASSWORD: user_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db:/docker-entrypoint-initdb.d
+    networks:
+      - tp-network
+
+networks:
+  tp-network:
+    driver: bridge
+
+volumes:
+  db_data:
