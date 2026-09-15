@@ -1,11 +1,15 @@
-version: '3.8'
-
 services:
   web:
-    image: php:8.4-apache
+    build: .
     container_name: tp_php_app
     ports:
       - "8080:80"
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: slotify_db
+      DB_USER: slotify_user
+      DB_PASSWORD: slotify_password
     volumes:
       - ./src:/var/www/html
     depends_on:
@@ -18,12 +22,12 @@ services:
     container_name: tp_mysql_db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: mi_base_datos
-      MYSQL_USER: usuario_tp
-      MYSQL_PASSWORD: user_password
+      MYSQL_ROOT_PASSWORD: "k9X7_mP4!zW7-tY3*eR6^uI1(oP)5sD-8fG+2hJ_9xV#N8qL2"
+      MYSQL_DATABASE: slotify_db
+      MYSQL_USER: slotify_user
+      MYSQL_PASSWORD: slotify_password
     ports:
-      - "3306:3306"
+      - "127.0.0.1:3306:3306"
     volumes:
       - db_data:/var/lib/mysql
       - ./db:/docker-entrypoint-initdb.d

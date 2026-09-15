@@ -1,0 +1,4 @@
+REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'slotify_user'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE ON slotify_db.* TO 'slotify_user'@'%';
+DROP USER IF EXISTS 'root'@'%';
+FLUSH PRIVILEGES;

@@ -1,0 +1,396 @@
+{
+  "info": {
+    "name": "Slotify - Padel Backend API",
+    "description": "Colección completa de endpoints para el Trabajo Práctico de Pádel (UNSO)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01. Autenticación y Seguridad",
+      "item": [
+        {
+          "name": "Obtener CSRF Token",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/csrf-token",
+              "host": ["{{base_url}}"],
+              "path": ["api", "csrf-token"]
+            }
+          }
+        },
+        {
+          "name": "Registro de Usuario",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"marcos_padel\",\n  \"email\": \"marcos@slotify.com\",\n  \"password\": \"Segura123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"Admin123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login Jugador (Cliente)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"jugador1\",\n  \"password\": \"Jugador123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Obtener Perfil Actual (Me)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "me"]
+            }
+          }
+        },
+        {
+          "name": "Solicitar Recuperación de Contraseña",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"jugador1@slotify.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/forgot-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "forgot-password"]
+            }
+          }
+        },
+        {
+          "name": "Restablecer Contraseña con Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"AQUI_EL_TOKEN\",\n  \"password\": \"NuevoPass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/reset-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "reset-password"]
+            }
+          }
+        },
+        {
+          "name": "Cerrar Sesión (Logout)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "02. Canchas de Pádel",
+      "item": [
+        {
+          "name": "Listar Canchas Activas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/courts",
+              "host": ["{{base_url}}"],
+              "path": ["api", "courts"]
+            }
+          }
+        },
+        {
+          "name": "Ver Detalle de Cancha",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/courts/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "courts", "1"]
+            }
+          }
+        },
+        {
+          "name": "Crear Cancha (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-CSRF-Token", "value": "{{csrf_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Cancha 4 - Pro\",\n  \"court_type\": \"Cristal Panorámica WPT\",\n  \"price_per_hour\": 16000,\n  \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/courts",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "courts"]
+            }
+          }
+        },
+        {
+          "name": "Modificar Cancha (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-CSRF-Token", "value": "{{csrf_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Cancha Central WPT\",\n  \"court_type\": \"Cristal Panorámica Techada\",\n  \"price_per_hour\": 18000,\n  \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/courts/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "courts", "1"]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Cancha (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "X-CSRF-Token", "value": "{{csrf_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/courts/3",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "courts", "3"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "03. Turnos y Reservas",
+      "item": [
+        {
+          "name": "Disponibilidad de Cancha por Fecha",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/bookings/availability?court_id=1&date=2026-09-10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings", "availability"],
+              "query": [
+                { "key": "court_id", "value": "1" },
+                { "key": "date", "value": "2026-09-10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Reservar Turno (Cliente)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-CSRF-Token", "value": "{{csrf_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"court_id\": 1,\n  \"booking_date\": \"2026-09-12\",\n  \"start_time\": \"19:00\",\n  \"end_time\": \"20:00\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/bookings",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings"]
+            }
+          }
+        },
+        {
+          "name": "Mis Reservas (Cliente)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/bookings/my-bookings",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings", "my-bookings"]
+            }
+          }
+        },
+        {
+          "name": "Cancelar Reserva",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "X-CSRF-Token", "value": "{{csrf_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/bookings/1/cancel",
+              "host": ["{{base_url}}"],
+              "path": ["api", "bookings", "1", "cancel"]
+            }
+          }
+        },
+        {
+          "name": "Listar Todas las Reservas (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/bookings",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "bookings"]
+            }
+          }
+        },
+        {
+          "name": "Cambiar Estado de Reserva (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-CSRF-Token", "value": "{{csrf_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"cancelada\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/bookings/1/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "bookings", "1", "status"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "04. Admin - Usuarios y Auditoría",
+      "item": [
+        {
+          "name": "Listar Usuarios / Buscador por Email",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/users?email=slotify.com",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users"],
+              "query": [
+                { "key": "email", "value": "slotify.com" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Activar / Desbloquear Usuario (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-CSRF-Token", "value": "{{csrf_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"is_active\": 1,\n  \"unlock\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/users/2/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", "2", "status"]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Usuario (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "X-CSRF-Token", "value": "{{csrf_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/users/99",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", "99"]
+            }
+          }
+        },
+        {
+          "name": "Listar Logs de Auditoría (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/audit-logs?limit=50",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "audit-logs"],
+              "query": [
+                { "key": "limit", "value": "50" }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "csrf_token",
+      "value": ""
+    }
+  ]
+}
