@@ -1,0 +1,14 @@
+services:
+  frontend:
+    build: .
+    container_name: tp_frontend
+    ports:
+      - "8081:80"
+    environment:
+      # Dentro de un contenedor, "localhost" es el propio contenedor.
+      # host.docker.internal apunta a tu PC, donde el backend escucha en 8080.
+      API_BASE_URL: http://host.docker.internal:8080
+    volumes:
+      - ./src:/var/www/html
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

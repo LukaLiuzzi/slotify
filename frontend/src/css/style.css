@@ -1,0 +1,258 @@
+/* style.css - estilos generales de Slotify */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #6ea8d8, #8ab6c9, #b9c6d6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.tarjeta {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 40px;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* --- Logo (imagen real) --- */
+.logo-img {
+    max-width: 260px;
+    width: 100%;
+    height: auto;
+    margin: 0 auto 8px;
+    display: block;
+}
+
+.logo-img-chico {
+    max-width: 160px;
+}
+
+.lema {
+    font-weight: 600;
+    color: #0d3b52;
+    margin: 6px 0 28px;
+}
+
+.etiqueta {
+    font-weight: 700;
+    color: #0d3b52;
+    margin: 18px 0 6px;
+    text-align: left;
+    display: block;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: none;
+    font-size: 15px;
+    background: #ffffffdd;
+}
+
+.boton {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    margin-top: 22px;
+    border: none;
+    border-radius: 12px;
+    background: #ffffffdd;
+    color: #0d3b52;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.boton:hover {
+    background: #ffffff;
+}
+
+.boton-borde {
+    background: transparent;
+    border: 2px solid #ffffffaa;
+    color: #ffffff;
+}
+
+.boton-borde:hover {
+    background: #ffffff22;
+}
+
+.volver {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #ffffffdd;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 13px;
+    text-decoration: none;
+    color: #0d3b52;
+    font-weight: 600;
+}
+
+.error {
+    background: #ffdddd;
+    color: #8a1c1c;
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-top: 16px;
+    font-size: 14px;
+}
+
+.exito {
+    background: #ddffe4;
+    color: #1c6b34;
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-top: 16px;
+    font-size: 14px;
+}
+
+/* --- Panel de inicio (home.php) --- */
+.contenedor-home {
+    display: flex;
+    width: 100%;
+    max-width: 900px;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+.barra-lateral {
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 18px;
+    padding: 20px;
+    width: 260px;
+    text-align: left;
+}
+
+.saludo {
+    background: #12b8a6;
+    color: white;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.opcion {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(90deg, #12b8a6, #0d7a86);
+    color: white;
+    padding: 12px 14px;
+    border-radius: 30px;
+    margin-bottom: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.contenido-home {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 18px;
+    min-height: 400px;
+    padding: 30px;
+    color: #0d3b52;
+}
+
+/* --- Tarjetas de cancha (home.php) --- */
+.lista-canchas {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 18px;
+}
+
+.tarjeta-cancha {
+    display: flex;
+    gap: 16px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 14px;
+    padding: 14px;
+    text-align: left;
+    align-items: center;
+}
+
+.foto-cancha {
+    width: 110px;
+    height: 90px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #12b8a6, #0d3b52);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+}
+
+.info-cancha p {
+    margin: 2px 0;
+    font-size: 14px;
+}
+
+.nombre-cancha {
+    font-weight: 800;
+    font-size: 17px !important;
+}
+
+.boton-chico {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    background: #12b8a6;
+    color: white;
+    font-weight: 700;
+    font-size: 13px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.boton-chico:hover {
+    background: #0d7a86;
+}
+
+/* --- Horarios disponibles (disponibilidad.php) --- */
+.lista-slots {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.slot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: #0d3b52;
+    font-weight: 600;
+}
+
+.slot-ocupado {
+    opacity: 0.55;
+}
