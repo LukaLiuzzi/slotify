@@ -4,66 +4,48 @@ exigir_login();
 
 $usuario = $_SESSION['usuario'];
 
-// Traemos la lista de canchas desde la API (ruta pública)
+// Lista de canchas (ruta pública de la API)
 [$codigo, $res] = api_get('/api/courts');
 $canchas = ($codigo === 200 && !empty($res['success'])) ? $res['data'] : [];
 $error_canchas = ($codigo !== 200) ? ($res['error'] ?? 'No se pudieron cargar las canchas.') : '';
+
+$titulo = "Inicio";
+$body_clase = "app";
+$pagina_actual = "home";
+include "partials/head.php";
 ?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Slotify - Inicio</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <div class="contenedor-home">
-        <div class="barra-lateral">
-            <div class="saludo">
-                Que gusto verte, <?= htmlspecialchars($usuario['username']) ?>
-            </div>
+    <div class="app-shell">
+        <?php include "partials/sidebar.php"; ?>
 
-            <?php if ($usuario['role'] === 'admin'): ?>
-                <label style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
-                    <input type="checkbox"> Panel de administrador
-                </label>
-            <?php endif; ?>
+        <main class="panel">
+            <header class="panel-cabecera">
+                <img class="logo-panel" src="images/logo.png" alt="Slotify">
+                <h1 class="panel-titulo"><?= e($usuario['username']) ?>, te traemos opciones que pueden interesarte</h1>
+            </header>
 
-            <button class="opcion">🔍 Reservar Espacio</button>
-            <button class="opcion">🗓️ Mis Reservas</button>
-            <button class="opcion">👤 Ver Perfil</button>
-
-            <a href="logout.php" class="opcion" style="margin-top:40px; background:#d9534f; text-align:center; justify-content:center;">
-                ⏻ Cerrar Sesión
-            </a>
-        </div>
-
-        <div class="contenido-home">
-            <img src="images/logo.png" alt="Slotify" class="logo-img-chico" style="margin:0 0 14px;">
-            <p>Elegí una opción del menú para comenzar</p>
+            <?php mostrar_flash(); ?>
 
             <?php if ($error_canchas): ?>
-                <p class="error"><?= htmlspecialchars($error_canchas) ?></p>
+                <p class="aviso aviso-error" role="alert"><?= e($error_canchas) ?></p>
             <?php elseif (empty($canchas)): ?>
-                <p>Todavía no hay canchas cargadas.</p>
+                <p class="vacio">Todavía no hay canchas cargadas.</p>
             <?php else: ?>
                 <div class="lista-canchas">
                     <?php foreach ($canchas as $cancha): ?>
-                        <div class="tarjeta-cancha">
-                            <div class="foto-cancha">🎾</div>
-                            <div class="info-cancha">
-                                <p class="nombre-cancha"><?= htmlspecialchars($cancha['name']) ?></p>
-                                <p><strong>Tipo de cancha:</strong> <?= htmlspecialchars($cancha['court_type']) ?></p>
-                                <p><strong>Precio:</strong> $<?= number_format((float)$cancha['price_per_hour'], 0, ',', '.') ?> / hora</p>
-                                <a href="disponibilidad.php?court_id=<?= urlencode($cancha['id']) ?>" class="boton-chico">
-                                    Ver disponibilidad
-                                </a>
+                        <article class="tarjeta-cancha">
+                            <div class="foto">
+                                <img src="<?= e(foto_cancha($cancha['id'])) ?>" alt="Foto de <?= e($cancha['name']) ?>">
+                                <a class="boton-turquesa" href="disponibilidad.php?court_id=<?= urlencode($cancha['id']) ?>">Ver disponibilidad</a>
                             </div>
-                        </div>
+                            <div class="datos-cancha">
+                                <p class="nombre"><?= e($cancha['name']) ?></p>
+                                <p><strong>Tipo de cancha:</strong> <?= e($cancha['court_type']) ?></p>
+                                <p><strong>Precio:</strong> <?= e(precio_formateado($cancha['price_per_hour'])) ?> / hora</p>
+                            </div>
+                        </article>
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
-        </div>
+        </main>
     </div>
-</body>
-</html>
+<?php include "partials/foot.php"; ?>

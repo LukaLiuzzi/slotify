@@ -22,6 +22,13 @@
 session_name('SLOTIFY_FRONT');
 session_start();
 
+// Ninguna página se guarda en la caché del navegador. Así, al tocar "Atrás"
+// después de cerrar sesión, el navegador vuelve a pedirla al servidor,
+// y el servidor (exigir_login) lo manda al login en vez de mostrarla.
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: 0');
+
 // --- Dirección base de tu API ---
 // Con Docker viene de la variable de entorno API_BASE_URL (ver docker-compose.yml).
 // Si no existe (ej: corriendo con XAMPP), usa http://localhost:8080.
@@ -151,6 +158,10 @@ function redirigir(string $pagina): void
 function exigir_login(): void
 {
     if (empty($_SESSION['usuario'])) {
+        flash('error', 'Necesitás iniciar sesión para ver esa página.');
         redirigir('login.php');
     }
 }
+
+// Funciones auxiliares compartidas (formato de fechas, avisos, fotos, etc.)
+require_once __DIR__ . '/helpers.php';

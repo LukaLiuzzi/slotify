@@ -6,7 +6,6 @@ if (!empty($_SESSION['usuario'])) {
 }
 
 $error = "";
-$exito = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuario = trim($_POST['usuario'] ?? '');
@@ -17,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($usuario === '' || $correo === '' || $contrasena === '') {
         $error = "Completá todos los campos.";
     } elseif ($contrasena !== $confirmar) {
-        // La API no pide confirmación, así que esta validación es solo del frontend
+        // La API no pide confirmación: esta validación es solo del frontend
         $error = "Las contraseñas no coinciden.";
     } else {
         [$codigo, $res] = api_post('/api/auth/register', [
@@ -27,60 +26,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
 
         if ($codigo === 201 && !empty($res['success'])) {
-            $exito = "¡Cuenta creada con éxito! Ya podés iniciar sesión.";
-        } elseif ($codigo === 409) {
-            $error = $res['error'] ?? "Ese usuario o correo ya está registrado.";
-        } elseif ($codigo === 0) {
-            $error = $res['error'];
-        } else {
-            // La API devuelve en "error" el motivo exacto (ej: reglas de la contraseña)
-            $error = $res['error'] ?? "No se pudo completar el registro.";
+            flash('exito', '¡Cuenta creada! Ya podés iniciar sesión.');
+            redirigir("login.php");
         }
+
+        // 400 = datos inválidos (la API explica cuál), 409 = usuario o correo ya existe
+        $error = $res['error'] ?? "No se pudo completar el registro.";
     }
 }
+
+$titulo = "Registrarse";
+$body_clase = "auth";
+include "partials/head.php";
 ?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Slotify - Registrarse</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body style="position:relative;">
-    <a href="index.php" class="volver">Volver al inicio</a>
+    <a class="volver" href="index.php">Volver al inicio</a>
+    <img class="logo-esquina" src="images/logo.png" alt="Slotify">
 
-    <div class="tarjeta">
-        <img src="images/logo.png" alt="Slotify" class="logo-img logo-img-chico">
-        <p class="lema">Ingresá tus datos para registrarte</p>
+    <main class="auth-main">
+        <h1 class="titulo-auth">Ingresa tus datos para registrarte</h1>
 
-        <form method="POST" action="register.php">
-            <label class="etiqueta">Nombre de Usuario</label>
-            <input type="text" name="usuario" required
-                   value="<?= htmlspecialchars($_POST['usuario'] ?? '') ?>">
+        <form class="form-auth form-compacto" method="POST" action="register.php">
+            <label for="usuario">Nombre de Usuario</label>
+            <input class="campo" type="text" id="usuario" name="usuario" required
+                   pattern="[A-Za-z0-9_]{3,50}" title="Entre 3 y 50 caracteres: letras, números y guión bajo"
+                   autocomplete="username" value="<?= e($_POST['usuario'] ?? '') ?>">
 
-            <label class="etiqueta">Correo Electrónico</label>
-            <input type="email" name="correo" required
-                   value="<?= htmlspecialchars($_POST['correo'] ?? '') ?>">
+            <label for="correo">Correo Electrónico</label>
+            <input class="campo" type="email" id="correo" name="correo" required autocomplete="email"
+                   value="<?= e($_POST['correo'] ?? '') ?>">
 
-            <label class="etiqueta">Contraseña</label>
-            <input type="password" name="contrasena" required>
-            <small style="color:#0d3b52; display:block; margin-top:4px;">
-                Mínimo 8 caracteres, con una mayúscula, un número y un símbolo.
-            </small>
+            <label for="contrasena">Contraseña</label>
+            <input class="campo" type="password" id="contrasena" name="contrasena" required minlength="8" autocomplete="new-password">
+            <p class="ayuda-campo">Mínimo 8 caracteres, con una mayúscula, un número y un símbolo.</p>
 
-            <label class="etiqueta">Confirmar Contraseña</label>
-            <input type="password" name="confirmar" required>
+            <label for="confirmar">Confirmar Contraseña</label>
+            <input class="campo" type="password" id="confirmar" name="confirmar" required minlength="8" autocomplete="new-password">
 
             <?php if ($error): ?>
-                <p class="error"><?= htmlspecialchars($error) ?></p>
-            <?php endif; ?>
-            <?php if ($exito): ?>
-                <p class="exito"><?= htmlspecialchars($exito) ?>
-                    <a href="login.php">Iniciar sesión</a></p>
+                <p class="aviso aviso-error" role="alert"><?= e($error) ?></p>
             <?php endif; ?>
 
-            <button type="submit" class="boton">Registrate</button>
+            <button type="submit" class="boton-contorno">Registrate</button>
         </form>
-    </div>
-</body>
-</html>
+    </main>
+<?php include "partials/foot.php"; ?>

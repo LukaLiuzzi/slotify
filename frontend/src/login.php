@@ -14,8 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($entrada === '' || $contrasena === '') {
         $error = "Completá usuario y contraseña.";
     } else {
-        // La API acepta "username" o "email" en el mismo campo de login.
-        // Si lo que tipeó tiene un "@", lo mandamos como email.
+        // La API acepta "username" o "email". Si tiene una @, lo mandamos como email.
         $clave_campo = (strpos($entrada, '@') !== false) ? 'email' : 'username';
 
         [$codigo, $res] = api_post('/api/auth/login', [
@@ -24,48 +23,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
 
         if ($codigo === 200 && !empty($res['success'])) {
-            // Guardamos los datos del usuario y el token CSRF en NUESTRA sesión
+            // Nuevo ID de sesión al loguearse (evita "session fixation") y guardamos los datos
+            session_regenerate_id(true);
             $_SESSION['usuario'] = $res['data'];
             $_SESSION['csrf_token'] = $res['data']['csrf_token'] ?? '';
             redirigir("home.php");
-        } elseif ($codigo === 429) {
-            $error = $res['error'] ?? "Cuenta bloqueada temporalmente por intentos fallidos.";
-        } elseif ($codigo === 0) {
-            $error = $res['error']; // no se pudo conectar con la API
-        } else {
-            $error = $res['error'] ?? "Usuario o contraseña incorrectos.";
         }
+
+        // 401 = credenciales mal, 429 = cuenta bloqueada, 403 = cuenta deshabilitada, 0 = sin conexión
+        $error = $res['error'] ?? "Usuario o contraseña incorrectos.";
     }
 }
+
+$titulo = "Iniciar sesión";
+$body_clase = "auth";
+include "partials/head.php";
 ?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Slotify - Iniciar sesión</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body style="position:relative;">
-    <a href="index.php" class="volver">Volver al inicio</a>
+    <a class="volver" href="index.php">Volver al inicio</a>
+    <img class="logo-esquina" src="images/logo.png" alt="Slotify">
 
-    <div class="tarjeta">
-        <img src="images/logo.png" alt="Slotify" class="logo-img logo-img-chico">
-        <p class="lema">Ingresá tus datos para empezar</p>
+    <main class="auth-main">
+        <h1 class="titulo-auth">Ingresa tus datos para empezar</h1>
+        <?php mostrar_flash(); ?>
 
-        <form method="POST" action="login.php">
-            <label class="etiqueta">Usuario o Correo</label>
-            <input type="text" name="usuario" required
-                   value="<?= htmlspecialchars($_POST['usuario'] ?? '') ?>">
+        <form class="form-auth" method="POST" action="login.php">
+            <label for="usuario">Nombre de Usuario</label>
+            <input class="campo" type="text" id="usuario" name="usuario" required autocomplete="username"
+                   value="<?= e($_POST['usuario'] ?? '') ?>">
 
-            <label class="etiqueta">Contraseña</label>
-            <input type="password" name="contrasena" required>
+            <label for="contrasena">Contraseña</label>
+            <input class="campo" type="password" id="contrasena" name="contrasena" required autocomplete="current-password">
 
             <?php if ($error): ?>
-                <p class="error"><?= htmlspecialchars($error) ?></p>
+                <p class="aviso aviso-error" role="alert"><?= e($error) ?></p>
             <?php endif; ?>
 
-            <button type="submit" class="boton">Iniciar Sesión</button>
+            <p class="ayuda">¿Tenés problemas con tu contraseña?</p>
+            <a class="boton-contorno chico" href="olvide.php">Reiniciar mi contraseña</a>
+
+            <button type="submit" class="boton-contorno">Iniciar Sesión</button>
         </form>
-    </div>
-</body>
-</html>
+    </main>
+<?php include "partials/foot.php"; ?>
