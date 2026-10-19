@@ -630,6 +630,20 @@ button.ac { appearance: none; }
 
 .barra-seccion { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 4px 0 10px; }
 .barra-seccion form { display: flex; gap: 8px; flex: 1; min-width: 220px; }
+.barra-seccion .campo-filtro { width: auto; flex: 1 1 150px; min-width: 140px; }
+.barra-seccion .boton-turquesa,
+.barra-seccion .boton-peligro { flex: 0 0 auto; white-space: nowrap; }
+
+/* Auditoría: columna de resultado y paginado */
+.celda-resultado { font-weight: 600; }
+.resultado-fallido { color: #b3261e; }
+.celda-detalle { text-align: left; font-size: 13px; }
+.paginacion { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 14px 0 4px; }
+.paginacion .boton-turquesa { text-decoration: none; }
+.paginacion-info { font-size: 14px; font-weight: 600; }
+
+.form-inline-pass { display: flex; gap: 8px; }
+.form-inline-pass .campo-pass { width: 160px; padding: 6px 10px; }
 
 /* Formularios dentro del panel */
 

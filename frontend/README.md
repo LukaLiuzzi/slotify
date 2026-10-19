@@ -14,7 +14,6 @@ frontend/
     ├── index.php            pantalla de inicio
     ├── login.php            POST /api/auth/login
     ├── olvide.php           POST /api/auth/forgot-password
-    ├── restablecer.php      POST /api/auth/reset-password
     ├── register.php         POST /api/auth/register
     │
     ├── home.php             GET  /api/courts
@@ -60,13 +59,15 @@ Las tipografías (Abril Fatface, Saira Extra Condensed, Inter) se cargan desde
 Google Fonts, así que hace falta internet. Sin conexión se ve igual, con
 tipografías de reemplazo.
 
-## Recuperar contraseña (en desarrollo)
+## Recuperar contraseña
 
-El backend no manda mails: escribe el código de recuperación en los logs.
+No hay servidor de mails: el pedido del usuario queda como una solicitud que
+ven los administradores.
 
 1. En `olvide.php` ingresá el correo.
-2. Mirá el código con `docker logs tp_php_app`.
-3. Entrá a `restablecer.php` (link "Ya tengo mi código"), pegá el código y elegí la nueva contraseña.
+2. El pedido aparece en el panel de admin (`admin.php?seccion=cambios`).
+3. El admin define la nueva contraseña ahí mismo y la informa al usuario.
+   También puede descartar la solicitud sin hacer cambios.
 
 ## Cómo se conecta con el backend
 

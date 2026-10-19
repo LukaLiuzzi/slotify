@@ -9,7 +9,7 @@ use App\Core\Csrf;
 use App\Core\Validator;
 use App\Models\User;
 use App\Models\AuditLog;
-use App\Models\PasswordReset;
+use App\Models\PasswordChangeRequest;
 
 class AuthController {
     public function csrfToken(Request $request): void {
@@ -34,8 +34,8 @@ class AuthController {
             Response::error('El formato del correo electrónico es inválido', 400);
         }
 
-        if (!Validator::validatePassword($password)) {
-            Response::error('La contraseña debe tener al menos 8 caracteres, incluir una letra mayúscula, un número y un símbolo', 400);
+        if (!Validator::validatePassword($password, $username, $email)) {
+            Response::error('La contraseña debe tener entre 8 y 48 caracteres, incluir una letra mayúscula, un número y un símbolo, y no puede contener tu nombre de usuario o correo', 400);
         }
 
         if (User::findByUsername($username)) {
@@ -46,7 +46,14 @@ class AuthController {
             Response::error('El correo electrónico ya se encuentra registrado', 409);
         }
 
-        $userId = User::create($username, $email, $password, 2);
+        try {
+            $userId = User::create($username, $email, $password, 2);
+        } catch (\PDOException $e) {
+            if ($e->getCode() === '23000') {
+                Response::error('El nombre de usuario o el correo electrónico ya se encuentran registrados', 409);
+            }
+            throw $e;
+        }
 
         AuditLog::log(
             $userId,
@@ -215,8 +222,7 @@ class AuthController {
 
         $user = User::findByEmail($email);
         if ($user) {
-            $resetToken = PasswordReset::createToken($user['id']);
-            error_log("PASSWORD_RESET_TOKEN [{$email}]: {$resetToken}");
+            PasswordChangeRequest::create($user['id']);
 
             AuditLog::log(
                 $user['id'],
@@ -225,45 +231,10 @@ class AuthController {
                 $request->getIpAddress(),
                 $request->getUserAgent(),
                 'success',
-                'Solicitud de restablecimiento de contraseña procesada'
+                'Solicitud de cambio de contraseña enviada al administrador'
             );
         }
 
-        Response::success(null, 'Si el correo electrónico se encuentra registrado, se enviaron las instrucciones para restablecer la contraseña');
-    }
-
-    public function resetPassword(Request $request): void {
-        $token = trim((string)$request->get('token', ''));
-        $newPassword = (string)$request->get('password', '');
-
-        if (empty($token) || empty($newPassword)) {
-            Response::error('Token y nueva contraseña requeridos', 400);
-        }
-
-        if (!Validator::validatePassword($newPassword)) {
-            Response::error('La nueva contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un símbolo', 400);
-        }
-
-        $reset = PasswordReset::verifyToken($token);
-        if (!$reset) {
-            Response::error('El token de restablecimiento es inválido o ha expirado', 400);
-        }
-
-        $userId = (int)$reset['user_id'];
-        User::updatePassword($userId, $newPassword);
-        PasswordReset::markAsUsed($reset['id']);
-
-        $user = User::findById($userId);
-        AuditLog::log(
-            $userId,
-            $user ? $user['username'] : null,
-            'PASSWORD_RESET_SUCCESS',
-            $request->getIpAddress(),
-            $request->getUserAgent(),
-            'success',
-            'Contraseña restablecida con token'
-        );
-
-        Response::success(null, 'Contraseña actualizada correctamente. Ya puede iniciar sesión');
+        Response::success(null, 'Si el correo electrónico se encuentra registrado, tu solicitud quedó registrada. Un administrador te asistirá con el cambio de contraseña');
     }
 }

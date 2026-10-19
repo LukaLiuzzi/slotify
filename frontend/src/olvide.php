@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         [$codigo, $res] = api_post('/api/auth/forgot-password', ['email' => $correo]);
 
         if ($codigo === 200 && !empty($res['success'])) {
-            $mensaje_ok = $res['message'] ?? "Si el correo está registrado, te enviamos las instrucciones.";
+            $mensaje_ok = $res['message'] ?? "Solicitud registrada. Un administrador te va a poner una nueva contraseña.";
         } else {
             $error = $res['error'] ?? "No se pudo procesar la solicitud.";
         }
@@ -49,7 +49,6 @@ include "partials/head.php";
             <?php endif; ?>
             <?php if ($mensaje_ok): ?>
                 <p class="aviso aviso-exito" role="status"><?= e($mensaje_ok) ?></p>
-                <p class="ayuda"><a class="enlace-claro" href="restablecer.php">Ya tengo mi código</a></p>
             <?php endif; ?>
 
             <button type="submit" class="boton-contorno">Recuperar contraseña</button>

@@ -3,8 +3,11 @@
 namespace App\Core;
 
 class Validator {
-    public static function validatePassword(string $password): bool {
-        if (strlen($password) < 8) {
+    private const MAX_LENGTH = 48;
+
+    public static function validatePassword(string $password, ?string $username = null, ?string $email = null): bool {
+        $length = strlen($password);
+        if ($length < 8 || $length > self::MAX_LENGTH) {
             return false;
         }
 
@@ -20,7 +23,33 @@ class Validator {
             return false;
         }
 
+        foreach (self::identifierFragments($username, $email) as $fragment) {
+            if (str_contains(strtolower($password), $fragment)) {
+                return false;
+            }
+        }
+
         return true;
+    }
+
+    private static function identifierFragments(?string $username, ?string $email): array {
+        $fragments = [];
+
+        $user = strtolower(trim($username ?? ''));
+        if ($user !== '') {
+            $fragments[] = $user;
+        }
+
+        $mail = strtolower(trim($email ?? ''));
+        if ($mail !== '') {
+            $fragments[] = $mail;
+            $local = explode('@', $mail)[0];
+            if (strlen($local) >= 3) {
+                $fragments[] = $local;
+            }
+        }
+
+        return $fragments;
     }
 
     public static function validateEmail(string $email): bool {

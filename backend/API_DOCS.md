@@ -214,34 +214,21 @@ Backend RESTful desarrollado en PHP 8.4 orientado a objetos (POO) con persistenc
 ```json
 {
   "success": true,
-  "message": "Si el correo electrónico se encuentra registrado, se enviaron las instrucciones para restablecer la contraseña"
+  "message": "Si el correo electrónico se encuentra registrado, tu solicitud quedó registrada. Un administrador te asistirá con el cambio de contraseña"
 }
 ```
-- **Nota de Seguridad y Entorno de Desarrollo:**
-  - Por seguridad y prevención de *User Enumeration* y secuestro de cuentas (*Account Takeover*), la API pública **nunca** devuelve el token en la respuesta HTTP.
-  - En un entorno de producción, el token se envía al correo del usuario.
-  - Para pruebas en este entorno local/Docker, el backend registra el token en los logs del servidor (`docker logs tp_php_app`) simulando la salida del servicio de emails.
+- **Nota de Seguridad y Flujo:**
+  - Por seguridad y prevención de *User Enumeration*, la API pública **nunca** revela si el correo existe o no.
+  - No se usan tokens ni mails: si el correo está registrado, se crea una solicitud pendiente en `password_change_requests`.
+  - Los administradores gestionan estas solicitudes en `/api/admin/password-requests` (ver 3.4.x) y definen la nueva contraseña en nombre del usuario.
 
 ---
 
-#### 3.1.7. Restablecer Contraseña con Token
-- **Método:** `POST`
-- **Ruta:** `/api/auth/reset-password`
-- **Acceso:** Público
-- **Cuerpo de la Petición:**
-```json
-{
-  "token": "4e7a8f1b90...",
-  "password": "NuevoPassword123!"
-}
-```
-- **Respuesta Exitosa (200 OK):**
-```json
-{
-  "success": true,
-  "message": "Contraseña actualizada correctamente. Ya puede iniciar sesión"
-}
-```
+#### 3.4.x Gestión de Solicitudes de Cambio de Contraseña (Admin)
+
+- **Listar pendientes:** `GET /api/admin/password-requests` (Acceso: Admin)
+- **Definir nueva contraseña:** `POST /api/admin/password-requests/{id}/password` con `{"password":"NuevaClave1!"}` (Acceso: Admin). Valida la política de contraseñas respecto de los datos del usuario afectado, desbloquea su cuenta y marca la solicitud como resuelta.
+- **Descartar solicitud:** `POST /api/admin/password-requests/{id}/reject` (Acceso: Admin). La marca como rechazada sin cambiar la contraseña.
 
 ---
 

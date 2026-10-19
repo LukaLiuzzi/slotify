@@ -15,6 +15,8 @@ if ($es_admin_pagina) {
         'admin-canchas'  => ['admin.php?seccion=canchas', 'icon-buscar.png', 'Administrar canchas'],
         'admin-reservas' => ['admin.php?seccion=reservas', 'icon-reservas.png', 'Administrar reservas'],
         'admin-usuarios' => ['admin.php?seccion=usuarios', 'icon-perfil.png', 'Administrar usuarios'],
+        'admin-cambios'  => ['admin.php?seccion=cambios', 'icon-editar.png', 'Cambios de contraseña'],
+        'admin-auditoria' => ['admin-auditoria.php', 'icon-detalle.png', 'Registros de auditoría'],
     ];
     if ($pagina_actual === 'admin') {
         $botones[] = ['home.php', 'icon-volver.png', 'Volver al panel de usuario', false];

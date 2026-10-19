@@ -105,20 +105,14 @@
           }
         },
         {
-          "name": "Restablecer Contraseña con Token",
+          "name": "Listar Solicitudes de Cambio de Contraseña (Admin)",
           "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"token\": \"AQUI_EL_TOKEN\",\n  \"password\": \"NuevoPass123!\"\n}"
-            },
+            "method": "GET",
+            "header": [],
             "url": {
-              "raw": "{{base_url}}/api/auth/reset-password",
+              "raw": "{{base_url}}/api/admin/password-requests",
               "host": ["{{base_url}}"],
-              "path": ["api", "auth", "reset-password"]
+              "path": ["api", "admin", "password-requests"]
             }
           }
         },

@@ -35,7 +35,6 @@ $router->post('/api/auth/register', [AuthController::class, 'register']);
 $router->post('/api/auth/login', [AuthController::class, 'login']);
 $router->post('/api/auth/logout', [AuthController::class, 'logout']);
 $router->post('/api/auth/forgot-password', [AuthController::class, 'forgotPassword']);
-$router->post('/api/auth/reset-password', [AuthController::class, 'resetPassword']);
 
 $router->get('/api/courts', [CourtController::class, 'index']);
 $router->get('/api/courts/{id}', [CourtController::class, 'show']);
@@ -47,6 +46,9 @@ $router->get('/api/bookings/my-bookings', [BookingController::class, 'myBookings
 $router->post('/api/bookings/{id}/cancel', [BookingController::class, 'cancel'], [AuthMiddleware::class]);
 
 $router->get('/api/admin/users', [UserController::class, 'index'], [AdminMiddleware::class]);
+$router->get('/api/admin/password-requests', [UserController::class, 'passwordRequests'], [AdminMiddleware::class]);
+$router->post('/api/admin/password-requests/{id}/password', [UserController::class, 'changePassword'], [AdminMiddleware::class]);
+$router->post('/api/admin/password-requests/{id}/reject', [UserController::class, 'rejectPasswordRequest'], [AdminMiddleware::class]);
 $router->put('/api/admin/users/{id}/status', [UserController::class, 'toggleStatus'], [AdminMiddleware::class]);
 $router->delete('/api/admin/users/{id}', [UserController::class, 'delete'], [AdminMiddleware::class]);
 $router->get('/api/admin/audit-logs', [AuditController::class, 'index'], [AdminMiddleware::class]);
